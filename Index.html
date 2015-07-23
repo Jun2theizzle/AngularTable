@@ -1,22 +1,36 @@
 <!doctype html>
 <html>
-  <head>
-    <title>My Angular Table</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-    <script src="ngApp.js"></script>
-    <script type="text/javascript">
-    	$(document).ready(function() {
+<head>
+  <title>My Angular Table</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  <script src="ui-bootstrap.min.js"></script>
+  <script src="ngApp.js"></script>
 
-    	});
-    </script>
-    <body ng-app="TableApp">
-    	<div ng-controller="TableController">
-    		{{ text }}
-    	</div>
-    </body>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="style.css" />
 
-  </head>
-  <body>
-  </body>
+  <script type="text/javascript">
+  $(document).ready(function() {
+
+  });
+  </script>
+
+
+
+  <body ng-app="TableApp">
+   <div ng-controller="TableController">
+    <button type="button" class="btn btn-danger">Action</button>
+    <div my-directive></div>
+  </div>
+</body>
+<script type="text/template" id="row.html">
+  <span>hihi</span>
+</script>
+
+
+
+</head>
+<body>
+</body>
 </html>
