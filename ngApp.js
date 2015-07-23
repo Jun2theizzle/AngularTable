@@ -1,11 +1,11 @@
 var app = angular.module('TableApp', [] );
 
 app.run(function ($templateCache) {
-        // <script type="text/ng-template"> ... is preferred, but VS 2012 doesn't give intellisense there
-        angular.element('script[type="text/template"]').each(function(idx, el) {
-        	$templateCache.put(el.id, el.innerHTML);
-        });
-    });
+	// <script type="text/ng-template"> ... is preferred, but VS 2012 doesn't give intellisense there
+	angular.element('script[type="text/template"]').each(function(idx, el) {
+		$templateCache.put(el.id, el.innerHTML);
+	});
+});
 
 app.directive('myDirective', function ($compile) {
 	return {
@@ -18,6 +18,13 @@ app.directive('myDirective', function ($compile) {
 	};
 });
 
+function MakeTable() {
+	var template = "";
+	template += "{{ awesome }}";
+
+	return template;
+};
+
 app.directive('testDirective', function ($compile) {
 	return {
 		restrict: 'A',
@@ -25,9 +32,9 @@ app.directive('testDirective', function ($compile) {
 			awesome : '='
 		},
 		link: function (scope, element, attrs) {
-			
+			scope.awesome.cool = "test";
 		},
-		template: "{{ awesome.options['clear'] }}"
+		template: MakeTable()
 	};
 });
 
@@ -35,15 +42,20 @@ app.directive('testDirective', function ($compile) {
 app.controller('TableController', function($scope) {
 	$scope.test = { text: "test0" };
 	$scope.List1 = {
-					data: [
-							{ AAA : 'TEST' }, 
-							{ BBB : 'TEST1'}, 
-							{ CCC : 'TEST2'}
-						],
-					options: {
-						clear: true
-					}
-				};
+		data: [
+		{ AAA : 'TEST', BBB : 'TEST1', CCC : 'TEST2' }, 
+		{ AAA : 'TEST', BBB : 'TEST1', CCC : 'TEST2' }, 
+		{ AAA : 'TEST', BBB : 'TEST1', CCC : 'TEST2' }
+		],
+		options: {
+			columns : [
+
+			]
+		}
+	};
+	$scope.myAlert = function() {
+		console.log($scope.test);
+	};
 });
 
 
