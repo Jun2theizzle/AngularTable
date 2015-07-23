@@ -16,11 +16,24 @@ app.directive('myDirective', function ($compile) {
 			$compile($('#test'))(scope);
 		},
 	};
-})
+});
+
+app.directive('testDirective', function ($compile) {
+	return {
+		restrict: 'A',
+		scope: {
+			awesome : '='
+		},
+		link: function (scope, element, attrs) {
+			
+		},
+		template: '{{ awesome.text }}'
+	};
+});
 
 
 app.controller('TableController', function($scope) {
-	$scope.text = "test0";
+	$scope.test = { text: "test0" };
 	$scope.List1 = ['TEST', 'TEST1', 'TEST2'];
 });
 
