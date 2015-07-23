@@ -27,14 +27,23 @@ app.directive('testDirective', function ($compile) {
 		link: function (scope, element, attrs) {
 			
 		},
-		template: '{{ awesome.text }}'
+		template: "{{ awesome.options['clear'] }}"
 	};
 });
 
 
 app.controller('TableController', function($scope) {
 	$scope.test = { text: "test0" };
-	$scope.List1 = ['TEST', 'TEST1', 'TEST2'];
+	$scope.List1 = {
+					data: [
+							{ AAA : 'TEST' }, 
+							{ BBB : 'TEST1'}, 
+							{ CCC : 'TEST2'}
+						],
+					options: {
+						clear: true
+					}
+				};
 });
 
 
