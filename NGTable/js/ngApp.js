@@ -41,7 +41,8 @@ app.directive('testDirective', function ($compile) {
 });
 
 app.directive('awesomeTable', function ($compile) {
-	function MakeTable(DataList, DataListKey) {
+	var angularKeys = {};
+	function MakeTable(DataList) {
 		var table = $('<table class="ng-table" />');
 				console.log(angular.toJson(DataList['data'], true));
 
@@ -49,7 +50,7 @@ app.directive('awesomeTable', function ($compile) {
 			return table;
 
 		var tableHeader = MakeTableHeader(DataList['data'][0], DataList['options']);
-		var tableBody =  MakeTableBody(DataList['data'], DataList['options'], DataListKey);
+		var tableBody =  MakeTableBody(DataList['data'], DataList['options']);
 		
 
 		table.append(tableHeader);
@@ -64,8 +65,8 @@ app.directive('awesomeTable', function ($compile) {
 
 		var tableHeaderRow = $('<tr class="ng-table-header-row" />');
 		angular.forEach(RowItem, function(value, key){
-			var thDOM = $('<th class="ng-table-cell" ng-click="reverse=!reverse; predicate=\''+ key +'\'"/>');
-			thDOM.html('<span>' + key +'</span>');
+			var thDOM = $('<th class="ng-table-cell" ng-click="'+ angularKeys.reverse + '=!' + angularKeys.reverse+'; '+ angularKeys.predicate + '=\''+ key +'\'"/>');
+			thDOM.html('<span>' + key +'</span><br /><input type="text" ng-model="'+ angularKeys.search + '.' + key + '" />');
 			tableHeaderRow.append(thDOM);
 		});
 		tableHeader.append(tableHeaderRow);
@@ -73,15 +74,16 @@ app.directive('awesomeTable', function ($compile) {
 		return tableHeader;
 	};
 
-	function MakeTableBody(Data, options, DataListKey) {
+	function MakeTableBody(Data, options) {
 		var tableBody =  $('<tbody class="ng-table-body" />');
-		tableBody.append(MakeBodyRow(Data[0], options, DataListKey));
+		tableBody.append(MakeBodyRow(Data[0], options));
 		
 		return tableBody;
 	};
 
-	function MakeBodyRow(RowItem, options, DataListKey) {
-		var tableRow = $('<tr class="ng-table-body-row" ng-repeat="item in '+ DataListKey +'.data | orderBy:predicate:reverse " />');
+	function MakeBodyRow(RowItem, options) {
+		var tableRow = $('<tr class="ng-table-body-row" ng-repeat="item in '+ 
+							angularKeys.name +'.data | orderBy:' + angularKeys.predicate + ':' + angularKeys.reverse + ' | filter:'+ angularKeys.search +'" />');
 		angular.forEach(RowItem, function(value, key) {
 			var cell =  $('<td class="ng-table-body-cell"/>');
 			var input = $('<input type="text" class="ng-table-body-cell-input" ng-model="item.' + key +'" />');
@@ -91,16 +93,27 @@ app.directive('awesomeTable', function ($compile) {
 		return tableRow;
 	};
 
+	function MakeAngularKeys(listName) {
+		angularKeys = { name: listName,
+		 		 		predicate: listName + 'Predicate',
+						search: listName + 'Search',
+						reverse: listName + 'Reverse' };
+
+	};
+
 	
 	return {
 		restrict: 'A',
 		scope: false,
 		link: function (scope, element, attrs) {
 			var list = attrs.awesomeList;
+			MakeAngularKeys(list);
 			element.attr('class', 'ng-table-container');
-			scope.predicate = 'AASDFASAA';
-			scope.reverse = false;
-			var table = MakeTable(scope[list], list);
+
+			scope[angularKeys.predicate] = '';
+			scope[angularKeys.reverse] = false;
+			scope[angularKeys.search] = {};
+			var table = MakeTable(scope[list], angularKeys);
 			element.append(table);
 			$compile(table)(scope);
 		}
