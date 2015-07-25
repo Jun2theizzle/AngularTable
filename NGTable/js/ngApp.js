@@ -43,7 +43,7 @@ app.directive('testDirective', function ($compile) {
 app.directive('awesomeTable', function ($compile) {
 	var angularKeys = {};
 	function MakeTable(DataList) {
-		var table = $('<table class="ng-table" />');
+		var table = $('<table class="ng-table table table-bordered" />');
 				console.log(angular.toJson(DataList['data'], true));
 
 		if(DataList == {} || angular.isUndefined(DataList))
@@ -65,8 +65,11 @@ app.directive('awesomeTable', function ($compile) {
 
 		var tableHeaderRow = $('<tr class="ng-table-header-row" />');
 		angular.forEach(RowItem, function(value, key){
-			var thDOM = $('<th class="ng-table-cell" ng-click="'+ angularKeys.reverse + '=!' + angularKeys.reverse+'; '+ angularKeys.predicate + '=\''+ key +'\'"/>');
-			thDOM.html('<span>' + key +'</span><br /><input type="text" ng-model="'+ angularKeys.search + '.' + key + '" />');
+			var thDOM = $('<th class="ng-table-header-cell bg-primary form-control" ng-click="'+ angularKeys.reverse + '=!' + angularKeys.reverse+'; '+ angularKeys.predicate + '=\''+ key +'\'"/>');
+			var formGroup = $('<div />');
+			formGroup.append($('<label for="' + angularKeys.name +'-search-' + key + '" />').append(key));
+			formGroup.append($('<input class="form-control ng-table-header-cell-input" type="text" id="' + angularKeys.name +'-search-' + key + '" ng-model="'+ angularKeys.search + '.' + key + '" />'));
+			thDOM.append(formGroup);
 			tableHeaderRow.append(thDOM);
 		});
 		tableHeader.append(tableHeaderRow);
@@ -86,7 +89,7 @@ app.directive('awesomeTable', function ($compile) {
 							angularKeys.name +'.data | orderBy:' + angularKeys.predicate + ':' + angularKeys.reverse + ' | filter:'+ angularKeys.search +'" />');
 		angular.forEach(RowItem, function(value, key) {
 			var cell =  $('<td class="ng-table-body-cell"/>');
-			var input = $('<input type="text" class="ng-table-body-cell-input" ng-model="item.' + key +'" />');
+			var input = $('<input type="text" class="ng-table-body-cell-input form-control" ng-model="item.' + key +'" />');
 			cell.append(input);
 			tableRow.append(cell);
 		});
@@ -100,6 +103,12 @@ app.directive('awesomeTable', function ($compile) {
 						reverse: listName + 'Reverse' };
 
 	};
+
+	function SetUpTable(){
+		$('.ng-table-header-cell-input').click(function(event) {
+			event.stopPropagation();
+		});
+	}
 
 	
 	return {
@@ -115,6 +124,7 @@ app.directive('awesomeTable', function ($compile) {
 			scope[angularKeys.search] = {};
 			var table = MakeTable(scope[list], angularKeys);
 			element.append(table);
+			SetUpTable();
 			$compile(table)(scope);
 		}
 	};
